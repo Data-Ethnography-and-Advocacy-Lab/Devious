@@ -94,30 +94,39 @@ c25 <- c(
 #' @export
 #' @examples
 #' create_sankey_bump(OP_flags, year, company, funding_category, n, 3)
-create_sankey_bump <- function(phantom_emissions_flags, time, ID, category, value, id_instance) {
-  # , title, xaxis, yaxis, labels
-  # string, df
-  # Filter dataset to only ID of interest
+c25 <- c(
+  "dodgerblue2", "#E31A1C", # red
+  "green4",
+  "#6A3D9A", # purple
+  "#FF7F00", # orange
+  "gold1",
+  "skyblue2", "#FB9A99", # lt pink
+  "palegreen2",
+  "#CAB2D6", # lt purple
+  "#FDBF6F", # lt orange
+  "gray70", "khaki2",
+  "maroon", "orchid1", "deeppink1", "blue1", "steelblue4",
+  "darkturquoise", "green1", "yellow3",
+  "darkorange4", "brown"
+)
+
+create_sankey_bump <- function(phantom_emissions_flags, time, ID, category, value, id_instance,
+                               title = NULL, x_label = NULL, y_label = NULL, palette = c25) {
   time <- enquo(time)
   ID <- enquo(ID)
-  print(ID)
   category <- enquo(category)
   value <- enquo(value)
 
   ID_phantom_emissions <- phantom_emissions_flags |>
     filter(!!ID == id_instance)
-  #mutate(category = str_wrap(category, width = 40)) Delete this???
 
-  # Change later
-  file_name <- paste0("analysis_data/sankey_op_", id_instance,".png" )
+  file_name <- paste0("analysis_data/sankey_op_", id_instance, ".png")
 
-  # Filter out to only include categories seen in plot
   ID_phantom_emissions <- ID_phantom_emissions |>
     group_by(!!category) |>
     filter(any(!!value > 0))
 
-  # Create sankey
-  ID_phantom_emissions |>
+  plot <- ID_phantom_emissions |>
     ggplot(aes(
       x = !!time,
       node = !!category,
@@ -130,10 +139,21 @@ create_sankey_bump <- function(phantom_emissions_flags, time, ID, category, valu
           legend.text = element_text(size = 12),
           subtitle.text = element_text(size = 10)) +
     guides(fill = guide_legend(nrow = 2)) +
-    ggtitle("Add in Later") +
-    scale_fill_manual(values = c25) +
-    labs(x = "",
-         y = "Number of Payments"
+    scale_fill_manual(values = palette)
+
+  # Add title if provided
+  if (!is.null(title)) {
+    plot <- plot + ggtitle(title)
+  }
+
+  # Add axis labels if provided
+  if (!is.null(x_label) || !is.null(y_label)) {
+    plot <- plot + labs(
+      x = ifelse(is.null(x_label), "", x_label),
+      y = ifelse(is.null(y_label), "", y_label)
     )
+  }
+
+  return(plot)
 }
 
