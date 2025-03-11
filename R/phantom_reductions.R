@@ -96,7 +96,7 @@ c25 <- c(
 #' create_sankey_bump(OP_flags, year, company, funding_category, n, 3)
 
 create_sankey_bump <- function(phantom_emissions_flags, time, ID, category, value, id_instance,
-                               title = NULL, x_label = NULL, y_label = NULL, palette = c25) {
+                               title = NULL, x_label = NULL, y_label = NULL, legend_title = NULL, palette = c25) {
   time <- enquo(time)
   ID <- enquo(ID)
   category <- enquo(category)
@@ -123,7 +123,7 @@ create_sankey_bump <- function(phantom_emissions_flags, time, ID, category, valu
     theme(legend.position = "bottom",
           legend.text = element_text(size = 12),
           subtitle.text = element_text(size = 10)) +
-    guides(fill = guide_legend(nrow = 2)) +
+    guides(fill = guide_legend(nrow = 2, title = legend_title)) +
     scale_fill_manual(values = palette)
 
   # Add title if provided
