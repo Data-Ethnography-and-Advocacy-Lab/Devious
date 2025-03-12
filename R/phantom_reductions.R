@@ -12,7 +12,7 @@ library(ggplot2)
 #' @export
 #' @examples
 #' OP_flags <- phantom_flags(open_payments, year, company, funding_category, n)
-phantom_flags <- function(aggregated_data, time, ID, category, value) {
+phantom_flags <- function(aggregated_data, time, ID, category, value, percent = FALSE) {
   time <- enquo(time)
   ID <- enquo(ID)
   category <- enquo(category)
@@ -21,12 +21,16 @@ phantom_flags <- function(aggregated_data, time, ID, category, value) {
   phantom_emissions_flags <- aggregated_data |>
     group_by(!!ID, !!category) |>
     mutate(last_time = lag(!!value),
-           this_time_minus_last = !!value - last_time,
+           this_time_minus_last = !!value - last_time) |>
+           # Percent
+           mutate(dropoff_flag = ifelse(percent == TRUE,
+                                       case_when(lag(!!value) != 0 & !!value < lag(!!value)*.5 ~ "dropoff",
+                                                 TRUE ~ NA),
+                                       case_when(last_time != 0 & !!value == 0 ~ "dropoff",
+                                                 TRUE ~ NA_character_))) |>
            # Dropoff is when value drops to 0
-           dropoff_flag = case_when(last_time != 0 & !!value == 0 ~ "dropoff",
-                                    TRUE ~ NA_character_),
            # Dropoff total is difference in value between times where a dropoff occurs
-           dropoff_total = case_when(dropoff_flag == "dropoff" ~ this_time_minus_last,
+           mutate(dropoff_total = case_when(dropoff_flag == "dropoff" ~ this_time_minus_last,
                                      TRUE ~ NA_real_))  |>
     ungroup() |>
     group_by(!!ID, !!time) |>
