@@ -12,7 +12,7 @@ library(ggplot2)
 #' @export
 #' @examples
 #' OP_flags <- phantom_flags(open_payments, year, company, funding_category, n)
-phantom_flags <- function(aggregated_data, time, ID, category, value, percent = FALSE, lag_interval = 1) {
+phantom_flags <- function(aggregated_data, time, ID, category, value, lag_interval = 1, percent = FALSE) {
   time <- enquo(time)
   ID <- enquo(ID)
   category <- enquo(category)
