@@ -70,21 +70,21 @@ dropoff_and_pickup <- function(phantom_emissions_flags){
 }
 
 
-c25 <- c(
-  "dodgerblue2", "#E31A1C", # red
-  "green4",
-  "#6A3D9A", # purple
-  "#FF7F00", # orange
-  "gold1",
-  "skyblue2", "#FB9A99", # lt pink
-  "palegreen2",
-  "#CAB2D6", # lt purple
-  "#FDBF6F", # lt orange
-  "gray70", "khaki2",
-  "maroon", "orchid1", "deeppink1", "blue1", "steelblue4",
-  "darkturquoise", "green1", "yellow3",
-  "darkorange4", "brown"
-)
+# c25 <- c(
+#   "dodgerblue2", "#E31A1C", # red
+#   "green4",
+#   "#6A3D9A", # purple
+#   "#FF7F00", # orange
+#   "gold1",
+#   "skyblue2", "#FB9A99", # lt pink
+#   "palegreen2",
+#   "#CAB2D6", # lt purple
+#   "#FDBF6F", # lt orange
+#   "gray70", "khaki2",
+#   "maroon", "orchid1", "deeppink1", "blue1", "steelblue4",
+#   "darkturquoise", "green1", "yellow3",
+#   "darkorange4", "brown"
+# )
 
 
 #' Create Sankey Bump Function
@@ -101,7 +101,7 @@ c25 <- c(
 #' create_sankey_bump(OP_flags, year, company, funding_category, n, 3)
 
 create_sankey_bump <- function(phantom_emissions_flags, time, ID, category, value, id_instance,
-                               title = NULL, x_label = NULL, y_label = NULL, legend_title = NULL, palette = c25) {
+                               title = NULL, x_label = NULL, y_label = NULL, legend_title = NULL, palette = c("#332288", "#117733", "#44aa99", "#88ccee", "#ddcc77","#cc6677", "#aa4499", "#882255", "#a1add3", "#49d909")) {
   time <- enquo(time)
   ID <- enquo(ID)
   category <- enquo(category)
